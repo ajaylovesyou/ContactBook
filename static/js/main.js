@@ -233,3 +233,4 @@ function escapeHtml(str) {
     .replace(/"/g,  '&quot;')
     .replace(/'/g,  '&#39;');
 }
+// The frontend is done — this is the end of main.js!
