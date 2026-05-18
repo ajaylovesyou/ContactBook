@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Book — Add Contact</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+  <!-- ── Navbar ─────────────────────────────────────────── -->
+  <nav class="navbar">
+    <a href="{{ url_for('index') }}" class="navbar__brand">📒 Contact<span>Book</span></a>
+    <button class="navbar__toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="navbar__links" id="navLinks">
+      <li><a href="{{ url_for('index') }}">Home</a></li>
+      <li><a href="{{ url_for('contacts') }}">All Contacts</a></li>
+      <li><a href="{{ url_for('add') }}" class="active">Add Contact</a></li>
+      <li><a href="{{ url_for('search') }}">Search</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Flash Messages ──────────────────────────────────── -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for category, message in messages %}
+          <div class="flash flash--{{ category }}">
+            {% if category == 'success' %}✅{% else %}⚠️{% endif %}
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main>
+    <div class="container">
+
+      <div class="page-header">
+        <h1>Add New Contact</h1>
+        <p>Fill in the details below. Name and phone are required.</p>
+      </div>
+
+      <div class="form-container">
+        <div class="form-card">
+          <form method="POST" action="{{ url_for('add') }}" id="addContactForm" novalidate>
+
+            <!-- Name -->
+            <div class="form-group">
+              <label class="form-label" for="name">
+                Full Name <span class="required">*</span>
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                class="form-input"
+                placeholder="e.g. Priya Sharma"
+                value="{{ prefill.get('name', '') }}"
+                required
+                autofocus
+              />
+            </div>
+
+            <!-- Phone -->
+            <div class="form-group">
+              <label class="form-label" for="phone">
+                Phone Number <span class="required">*</span>
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                class="form-input"
+                placeholder="e.g. 9876543210"
+                value="{{ prefill.get('phone', '') }}"
+                required
+              />
+              <p class="form-hint">Digits only — spaces, + and - are allowed.</p>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label class="form-label" for="email">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-input"
+                placeholder="e.g. priya@example.com"
+                value="{{ prefill.get('email', '') }}"
+              />
+            </div>
+
+            <!-- Address -->
+            <div class="form-group">
+              <label class="form-label" for="address">Address</label>
+              <textarea
+                id="address"
+                name="address"
+                class="form-textarea"
+                placeholder="e.g. 42 MG Road, Rajkot, Gujarat"
+              >{{ prefill.get('address', '') }}</textarea>
+            </div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+              <button type="submit" class="btn btn--primary">✔ Save Contact</button>
+              <a href="{{ url_for('contacts') }}" class="btn btn--outline">Cancel</a>
+            </div>
+
+          </form>
+        </div><!-- /form-card -->
+      </div><!-- /form-container -->
+
+    </div><!-- /container -->
+  </main>
+
+  <footer class="footer">
+    ContactBook &copy; 2024 — Built with Flask &amp; SQLite
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
