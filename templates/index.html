@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Book — Home</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+  <!-- ── Navbar ─────────────────────────────────────────── -->
+  <nav class="navbar">
+    <a href="{{ url_for('index') }}" class="navbar__brand">
+      📒 Contact<span>Book</span>
+    </a>
+    <button class="navbar__toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="navbar__links" id="navLinks">
+      <li><a href="{{ url_for('index') }}"    class="active">Home</a></li>
+      <li><a href="{{ url_for('contacts') }}">All Contacts</a></li>
+      <li><a href="{{ url_for('add') }}">Add Contact</a></li>
+      <li><a href="{{ url_for('search') }}">Search</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Flash Messages ──────────────────────────────────── -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for category, message in messages %}
+          <div class="flash flash--{{ category }}">
+            {% if category == 'success' %}✅{% else %}⚠️{% endif %}
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- ── Hero ────────────────────────────────────────────── -->
+  <main>
+    <section class="hero">
+      <p class="hero__eyebrow">Your Personal Address Book</p>
+      <h1 class="hero__title">
+        All your contacts,<br><em>beautifully organised</em>
+      </h1>
+      <p class="hero__subtitle">
+        Store names, phone numbers, emails and addresses — all in one place,
+        always at your fingertips.
+      </p>
+
+      <div class="hero__stat">
+        <span class="hero__stat-number">{{ total }}</span>
+        <span class="hero__stat-label">Contacts Saved</span>
+      </div>
+
+      <div class="hero__actions">
+        <a href="{{ url_for('add') }}"      class="btn btn--primary">＋ Add New Contact</a>
+        <a href="{{ url_for('contacts') }}" class="btn btn--outline">View All Contacts</a>
+      </div>
+    </section>
+
+    <!-- ── Feature Cards ──────────────────────────────────── -->
+    <section class="features container">
+      <a href="{{ url_for('contacts') }}" class="feature-card">
+        <div class="feature-card__icon">📋</div>
+        <h3 class="feature-card__title">All Contacts</h3>
+        <p class="feature-card__text">Browse every saved contact in a clean card layout.</p>
+      </a>
+      <a href="{{ url_for('add') }}" class="feature-card">
+        <div class="feature-card__icon">➕</div>
+        <h3 class="feature-card__title">Add Contact</h3>
+        <p class="feature-card__text">Quickly add name, phone, email &amp; address.</p>
+      </a>
+      <a href="{{ url_for('search') }}" class="feature-card">
+        <div class="feature-card__icon">🔍</div>
+        <h3 class="feature-card__title">Search</h3>
+        <p class="feature-card__text">Find anyone instantly by name or phone number.</p>
+      </a>
+    </section>
+  </main>
+
+  <!-- ── Footer ──────────────────────────────────────────── -->
+  <footer class="footer">
+    ContactBook &copy; 2024 — Built with Flask &amp; SQLite
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
