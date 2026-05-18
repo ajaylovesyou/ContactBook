@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Book — All Contacts</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+  <!-- ── Navbar ─────────────────────────────────────────── -->
+  <nav class="navbar">
+    <a href="{{ url_for('index') }}" class="navbar__brand">📒 Contact<span>Book</span></a>
+    <button class="navbar__toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="navbar__links" id="navLinks">
+      <li><a href="{{ url_for('index') }}">Home</a></li>
+      <li><a href="{{ url_for('contacts') }}" class="active">All Contacts</a></li>
+      <li><a href="{{ url_for('add') }}">Add Contact</a></li>
+      <li><a href="{{ url_for('search') }}">Search</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Flash Messages ──────────────────────────────────── -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for category, message in messages %}
+          <div class="flash flash--{{ category }}">
+            {% if category == 'success' %}✅{% else %}⚠️{% endif %}
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main>
+    <div class="container">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <h1>All Contacts</h1>
+        <p>{{ contacts|length }} contact{{ 's' if contacts|length != 1 else '' }} saved</p>
+      </div>
+
+      <!-- Toolbar: filter + add button -->
+      <div class="contacts-toolbar">
+        <input
+          type="text"
+          id="filterInput"
+          class="filter-input"
+          placeholder="🔎 Quick filter by name…"
+          autocomplete="off"
+        />
+        <a href="{{ url_for('add') }}" class="btn btn--primary">＋ Add Contact</a>
+      </div>
+
+      <!-- Contact Cards Grid -->
+      <div class="contacts-grid" id="contactsGrid">
+
+        {% if contacts %}
+          {% for contact in contacts %}
+          <div class="contact-card" data-name="{{ contact['name']|lower }}">
+            <div class="contact-card__header">
+              <div class="contact-card__avatar">
+                {{ contact['name'][0]|upper }}
+              </div>
+              <div>
+                <div class="contact-card__name">{{ contact['name'] }}</div>
+                <div class="contact-card__phone">📞 {{ contact['phone'] }}</div>
+              </div>
+            </div>
+
+            {% if contact['email'] %}
+            <div class="contact-card__info">✉️ {{ contact['email'] }}</div>
+            {% endif %}
+
+            {% if contact['address'] %}
+            <div class="contact-card__info">📍 {{ contact['address'] }}</div>
+            {% endif %}
+
+            <div class="contact-card__actions">
+              <a href="{{ url_for('detail', contact_id=contact['id']) }}" class="btn btn--outline btn--sm">
+                View
+              </a>
+              <form method="POST"
+                    action="{{ url_for('delete', contact_id=contact['id']) }}"
+                    class="delete-form"
+                    data-name="{{ contact['name'] }}"
+                    style="display:inline;">
+                <button type="submit" class="btn btn--danger btn--sm">Delete</button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+
+        {% else %}
+          <div class="empty-state">
+            <div class="empty-state__icon">📭</div>
+            <h3 class="empty-state__title">No contacts yet</h3>
+            <p>Start by adding your first contact!</p>
+            <a href="{{ url_for('add') }}" class="btn btn--primary mt-2">＋ Add Contact</a>
+          </div>
+        {% endif %}
+
+      </div><!-- /contacts-grid -->
+
+      <!-- No results message (shown by JS filter) -->
+      <div id="noFilterResults" class="empty-state" style="display:none;">
+        <div class="empty-state__icon">🔍</div>
+        <h3 class="empty-state__title">No matches found</h3>
+        <p>Try a different name.</p>
+      </div>
+
+    </div><!-- /container -->
+  </main>
+
+  <footer class="footer">
+    ContactBook &copy; 2024 — Built with Flask &amp; SQLite
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
